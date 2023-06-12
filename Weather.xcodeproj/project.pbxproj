@@ -127,14 +127,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C287CA612A34D9DC00068961 /* Weather */ = {
-			isa = PBXGroup;
-			children = (
-				C287CA892A361D9200068961 /* WeatherDetailsView */,
-			);
-			path = Weather;
-			sourceTree = "<group>";
-		};
 		C287CA742A36105100068961 /* SharedViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -155,14 +147,14 @@
 			path = WeatherDetailsUIKitView;
 			sourceTree = "<group>";
 		};
-		C287CA892A361D9200068961 /* WeatherDetailsView */ = {
+		C287CA892A361D9200068961 /* WeatherDetails */ = {
 			isa = PBXGroup;
 			children = (
 				C287CA822A3618CB00068961 /* WeatherDetailsUIKitView */,
 				C287CA662A34DB4300068961 /* WeatherDetailsView.swift */,
 				C287CA702A35438400068961 /* WeatherDetailsViewModel.swift */,
 			);
-			path = WeatherDetailsView;
+			path = WeatherDetails;
 			sourceTree = "<group>";
 		};
 		C287CA8A2A36279F00068961 /* LocationManager */ = {
@@ -225,7 +217,7 @@
 				D7A911222A33CB6D00ACD5BF /* Assets.xcassets */,
 				D7A911242A33CB6D00ACD5BF /* Weather.entitlements */,
 				D7A911572A33DEC300ACD5BF /* Search */,
-				C287CA612A34D9DC00068961 /* Weather */,
+				C287CA892A361D9200068961 /* WeatherDetails */,
 				C287CA742A36105100068961 /* SharedViews */,
 				D7A9114B2A33CBA500ACD5BF /* Network */,
 				D7A911502A33CC0500ACD5BF /* Models */,
