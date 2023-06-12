@@ -18,14 +18,14 @@ struct WeatherTile: View {
                 .font(.largeTitle)
             Spacer()
             VStack(spacing: 0) {
-                Text(String(weatherInfo.main.temp))
+                Text(String(weatherInfo.main.temp.fahrenheit))
                 HStack {
                     Text("Min")
-                    Text(String(weatherInfo.main.tempMin))
+                    Text(String(weatherInfo.main.tempMin.fahrenheit))
                 }
                 HStack {
                     Text("Max")
-                    Text(String(weatherInfo.main.tempMax))
+                    Text(String(weatherInfo.main.tempMax.fahrenheit))
                 }
             }
             

@@ -20,6 +20,7 @@ struct WeatherDetailsView: View {
                     self.presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("Dismiss")
+                        .font(.largeTitle)
                 }
                 .padding(.all)
             }
@@ -33,9 +34,9 @@ struct WeatherDetailsView: View {
                 Text("Error")
             case .success:
                 WeatherViewSwiftUI()
-                    .edgesIgnoringSafeArea(.all)
             }
         }
+        .edgesIgnoringSafeArea(.all)
         .background(
             ZStack {
                 Image("detailsBackground")
