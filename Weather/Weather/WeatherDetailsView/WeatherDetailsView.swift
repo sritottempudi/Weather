@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct WeatherDetailsView: View {
+struct WeatherDetailsView<ViewModel>: View where ViewModel: WeatherDetailsViewModelable {
     
-    @ObservedObject var viewModel: WeatherDetailsViewModel
+    @ObservedObject var viewModel: ViewModel
     @Environment(\.presentationMode) private var presentationMode
 
     var body: some View {

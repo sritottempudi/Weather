@@ -8,13 +8,18 @@
 import Foundation
 import Combine
 
-class WeatherDetailsViewModel: ObservableObject {
+protocol WeatherDetailsViewModelable: ObservableObject {
+    var viewState: WeatherViewState { get set }
+    func fetchWeatherInfo()
+}
+
+
+class WeatherDetailsViewModel: ObservableObject, WeatherDetailsViewModelable {
 
     @Published var viewState: WeatherViewState = .loading
-    @Published var showDetailsView: Bool = false
-    var selectedCity: Coordinates?
-    var anyCancellable = Set<AnyCancellable>()
-    var api: NetworkServicable
+    private var selectedCity: Coordinates?
+    private var anyCancellable = Set<AnyCancellable>()
+    private var api: NetworkServicable
 
     init(api: NetworkServicable, selectedCity: Coordinates?) {
         self.api = api

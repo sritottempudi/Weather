@@ -12,16 +12,20 @@ struct BottomSheet<ViewModel>: View where ViewModel: SearchViewModelable {
     @ObservedObject var viewModel: ViewModel
     
     var body: some View {
+        WeatherDetailsView(viewModel: weatherDetailsViewModel)
+    }
+    
+    var weatherDetailsViewModel: WeatherDetailsViewModel {
         switch viewModel.viewState {
         case .landingScreen:
-            return WeatherDetailsView(viewModel: .init(api: viewModel.api,
-                                                weatherInfo: viewModel.selectedCityWeatherInfo))
+            return .init(api: viewModel.api,
+                         weatherInfo: viewModel.selectedCityWeatherInfo)
         case .dataFetched:
-            return WeatherDetailsView(viewModel: .init(api: viewModel.api,
-                                                selectedCity: viewModel.selectedCity))
+            return .init(api: viewModel.api,
+                         selectedCity: viewModel.selectedCity)
         default:
-            return WeatherDetailsView(viewModel: .init(api: viewModel.api,
-                                                weatherInfo: nil))
+            return .init(api: viewModel.api,
+                         weatherInfo: nil)
         }
     }
 }
