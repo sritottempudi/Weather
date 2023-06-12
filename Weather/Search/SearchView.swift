@@ -48,6 +48,7 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModelable {
         
     }
     
+    /// Custom Search Text field 
     var searchTextView: some View {
         ZStack {
             Color.black.opacity(0.3)

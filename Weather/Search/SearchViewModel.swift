@@ -10,51 +10,55 @@ import Combine
 import CoreLocation
 
 protocol SearchViewModelable: ObservableObject {
+    // Search results with city names and its coordinates
     var results: [Coordinates] { get set }
+    // User searched string
     var searchString: String { get set }
+    // Search view states
     var viewState: SearchViewState { get set }
+    // Boolean to show/hide the details view when tapped on tiles
     var showDetailsView: Bool { get set }
+    // City selected by the user after search results
     var selectedCity: Coordinates? { get set }
+    // City selected by user in the recents page
     var selectedCityWeatherInfo: WeatherInfo? { get set }
+    // Netowrk servicable that has the instance to make network calls
     var api: NetworkServicable { get set }
+    // Landing page with recently selected city and current location details
     var landingScreenInfo: [WeatherInfo] { get set }
     
-    func `init`(api: NetworkServicable)
+    // Recents screen onAppear
     func onAppear()
+    // User selected city on the resutls screen
     func didSelectCity(coordinates: Coordinates)
+    // User selected city on the recents screen
     func didSelectCity(weatherInfo: WeatherInfo)
 }
 
 class SearchViewModel: ObservableObject, SearchViewModelable {
-    
-    func `init`(api: NetworkServicable) {
-        self.api = api
-        subscribeSearchResults()
-    }
-    
-
     var results: [Coordinates] = []
     @Published var searchString = ""
     @Published var viewState: SearchViewState = .landingScreen
     @Published var showDetailsView: Bool = false
     var selectedCity: Coordinates?
     var selectedCityWeatherInfo: WeatherInfo?
+    var api: NetworkServicable
+    @Published var landingScreenInfo: [WeatherInfo] = []
+    
+    // Local variable that updates the search landing screen data
     private var currentLocationWeatherInfo: WeatherInfo? {
         didSet {
             self.appendLandingScreenWeatherInfo()
         }
     }
+    // Local variable that updates the search landing screen data
     private var previouslySearchedWeatherInfo: WeatherInfo? {
         didSet {
             self.appendLandingScreenWeatherInfo()
         }
     }
-    @Published var landingScreenInfo: [WeatherInfo] = []
-    
     private var anyCancellable = Set<AnyCancellable>()
-
-    var api: NetworkServicable
-
+    
     init(api: NetworkServicable) {
         self.api = api
         subscribeSearchResults()
@@ -65,6 +69,7 @@ class SearchViewModel: ObservableObject, SearchViewModelable {
         retrieveCurrentLocation()
     }
     
+    // User selected city on the resutls screen
     func didSelectCity(coordinates: Coordinates) {
         self.selectedCity = coordinates
         selectedCityWeatherInfo = nil
@@ -72,6 +77,7 @@ class SearchViewModel: ObservableObject, SearchViewModelable {
         saveDataInCache()
     }
     
+    // User selected city on the recents screen
     func didSelectCity(weatherInfo: WeatherInfo) {
         selectedCityWeatherInfo = weatherInfo
         selectedCity = nil
@@ -81,6 +87,7 @@ class SearchViewModel: ObservableObject, SearchViewModelable {
 }
 
 extension SearchViewModel {
+    /// Subscribe for search text changes and fetch search results
     private func subscribeSearchResults() {
         $searchString
             .debounce(for: 1.0, scheduler: DispatchQueue.main)
@@ -95,12 +102,17 @@ extension SearchViewModel {
             }.store(in: &anyCancellable)
     }
     
+    ///  Saving data to cache
     private func saveDataInCache() {
         UserDefaults.standard.storeCodable(selectedCity, key: "SelectedCity")
         UserDefaults.standard.storeCodable(selectedCityWeatherInfo, key: "SelectedWeatherInfo")
     }
 }
 extension SearchViewModel: LocationManagerDelegate {
+    /// Callback for did change location authorization status
+    /// - Parameters:
+    ///   - status: Location authorization status
+    ///   - location: current location
     func didChangeAuthorization(status: CLAuthorizationStatus, location: CLLocation?) {
         guard let location = location else {
             return
@@ -113,7 +125,9 @@ extension SearchViewModel: LocationManagerDelegate {
 }
 
 extension SearchViewModel {
-
+    
+    /// Fetches search results
+    /// - Parameter searchText: user entered text
     private func getSearchResults(for searchText: String) {
         api.searchCity(searchText)
             .sink(receiveCompletion: { (completion) in
@@ -136,6 +150,10 @@ extension SearchViewModel {
             .store(in: &anyCancellable)
     }
     
+    /// Fetch weather info for the given location coordinates
+    /// - Parameters:
+    ///   - location: Lat and Lon of the location
+    ///   - completion: return the weather info if available
     private func fetchWeather(location: LocationCoordinates, completion: @escaping ((WeatherInfo?) -> Void)) {
         api.fetchWeatherInfo(location)
             .sink(receiveCompletion: { (completion) in
@@ -163,6 +181,7 @@ extension SearchViewModel {
         self.landingScreenInfo = landingScreenData
     }
     
+    /// Fetches the initial launch data from cache/location manager
     private func fetchSavedData() {
         let savedWeatherInfo : WeatherInfo? = UserDefaults.standard.retrieveCodable(for: "SelectedWeatherInfo")
         let savedSelectedCity: Coordinates? = UserDefaults.standard.retrieveCodable(for: "SelectedCity")
@@ -189,10 +208,6 @@ extension SearchViewModel {
             }
         }
     }
-}
-
-enum SomeError: Error {
-    case incorrectOuput
 }
 
 
