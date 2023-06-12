@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
 
 protocol LocationManagerDelegate: AnyObject {
+    // Notifies the listner if there is any location update in the background
     func didChangeAuthorization(status: CLAuthorizationStatus, location: CLLocation?)
 }
 
@@ -19,6 +20,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     var requestLocationAuthorizationCallback: ((CLAuthorizationStatus, CLLocation?) -> Void)?
     weak var delegate: LocationManagerDelegate?
     
+    /// Checks for location Access and requests if user permission is not provided
     public func requestLocationAuthorization() {
         self.locationManager.delegate = self
 
@@ -36,6 +38,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             self.locationManager.requestAlwaysAuthorization()
         }
     }
+    
     public func locationManager(_ manager: CLLocationManager,
                                 didChangeAuthorization status: CLAuthorizationStatus) {
         self.requestLocationAuthorizationCallback?(status, manager.location)

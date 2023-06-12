@@ -19,5 +19,6 @@ struct MessageView: View {
                 .font(.callout)
             Spacer()
         }
+        .background(Color.clear)
     }
 }
