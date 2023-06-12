@@ -32,7 +32,7 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModelable {
                     viewModel.onAppear()
                 }
             case .dataFetched:
-                ResultsListView(coordinates: viewModel.renderModel) {
+                ResultsListView(coordinates: viewModel.results) {
                     viewModel.didSelectCity(coordinates: $0)
                 }
             case .error:

@@ -8,10 +8,18 @@
 import UIKit
 
 class WeatherView: UIView {
-    let kCONTENT_XIB_NAME = "WeatherView"
+    let XIBName = "WeatherView"
     
     @IBOutlet var contentView: UIView!
-
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var tempLabel: UILabel!
+    @IBOutlet weak var feelsLikeTempLabel: UILabel!
+    @IBOutlet weak var maxTempLabel: UILabel!
+    @IBOutlet weak var minTempLabel: UILabel!
+    
+    var weatherInfo: WeatherInfo?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -23,21 +31,36 @@ class WeatherView: UIView {
     }
     
     func commonInit() {
-        Bundle.main.loadNibNamed(kCONTENT_XIB_NAME, owner: self, options: nil)
+        Bundle.main.loadNibNamed(XIBName, owner: self, options: nil)
         contentView.pin(self)
         contentView.backgroundColor = .clear
+        setupView()
     }
-}
+    
+    func update(weatherInfo: WeatherInfo) {
+        self.weatherInfo = weatherInfo
+        setupView()
+    }
+    
+    func setupView() {
+        guard let weatherInfo = weatherInfo else {
+            return
+        }
+        
+        nameLabel.text = weatherInfo.name
+        tempLabel.text = weatherInfo.main.temp.fahrenheit
+        feelsLikeTempLabel.text = weatherInfo.main.feelsLike.fahrenheit
+        maxTempLabel.text = weatherInfo.main.tempMax.fahrenheit
+        minTempLabel.text = weatherInfo.main.tempMin.fahrenheit
+        setupImageView()
+    }
+    
+    // For the sake of time not using Image Downloader.
+    func setupImageView() {
+        guard let image = weatherInfo?.weather.first?.icon else {
+            return
+        }
 
-extension UIView
-{
-    func pin(_ container: UIView!) -> Void{
-        self.translatesAutoresizingMaskIntoConstraints = false;
-        self.frame = container.frame;
-        container.addSubview(self);
-        NSLayoutConstraint(item: self, attribute: .leading, relatedBy: .equal, toItem: container, attribute: .leading, multiplier: 1.0, constant: 0).isActive = true
-        NSLayoutConstraint(item: self, attribute: .trailing, relatedBy: .equal, toItem: container, attribute: .trailing, multiplier: 1.0, constant: 0).isActive = true
-        NSLayoutConstraint(item: self, attribute: .top, relatedBy: .equal, toItem: container, attribute: .top, multiplier: 1.0, constant: 0).isActive = true
-        NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: container, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+        imageView.image = UIImage(named: image)
     }
 }

@@ -32,8 +32,8 @@ struct WeatherDetailsView: View {
                     }
             case .error:
                 Text("Error")
-            case .success:
-                WeatherViewSwiftUI()
+            case .success(let weatherInfo):
+                WeatherViewSwiftUI(weatherInfo: weatherInfo)
             }
         }
         .edgesIgnoringSafeArea(.all)

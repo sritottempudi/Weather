@@ -10,7 +10,7 @@ import Combine
 import CoreLocation
 
 protocol SearchViewModelable: ObservableObject {
-    var renderModel: [Coordinates] { get set }
+    var results: [Coordinates] { get set }
     var searchString: String { get set }
     var viewState: SearchViewState { get set }
     var showDetailsView: Bool { get set }
@@ -19,14 +19,21 @@ protocol SearchViewModelable: ObservableObject {
     var api: NetworkServicable { get set }
     var landingScreenInfo: [WeatherInfo] { get set }
     
+    func `init`(api: NetworkServicable)
     func onAppear()
     func didSelectCity(coordinates: Coordinates)
     func didSelectCity(weatherInfo: WeatherInfo)
 }
 
 class SearchViewModel: ObservableObject, SearchViewModelable {
+    
+    func `init`(api: NetworkServicable) {
+        self.api = api
+        subscribeSearchResults()
+    }
+    
 
-    var renderModel: [Coordinates] = []
+    var results: [Coordinates] = []
     @Published var searchString = ""
     @Published var viewState: SearchViewState = .landingScreen
     @Published var showDetailsView: Bool = false
@@ -122,7 +129,7 @@ extension SearchViewModel {
                     self.viewState = .noResults(searchText)
                 }
                 else {
-                    self.renderModel = result
+                    self.results = result
                     self.viewState = .dataFetched
                 }
             }
