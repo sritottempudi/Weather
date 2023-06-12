@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct BottomSheet: View {
+struct BottomSheet<ViewModel>: View where ViewModel: SearchViewModelable {
     
-    @ObservedObject var viewModel: SearchViewModel
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         switch viewModel.viewState {

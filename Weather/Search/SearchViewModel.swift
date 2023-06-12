@@ -9,7 +9,22 @@ import Foundation
 import Combine
 import CoreLocation
 
-class SearchViewModel: ObservableObject {
+protocol SearchViewModelable: ObservableObject {
+    var renderModel: [Coordinates] { get set }
+    var searchString: String { get set }
+    var viewState: SearchViewState { get set }
+    var showDetailsView: Bool { get set }
+    var selectedCity: Coordinates? { get set }
+    var selectedCityWeatherInfo: WeatherInfo? { get set }
+    var api: NetworkServicable { get set }
+    var landingScreenInfo: [WeatherInfo] { get set }
+    
+    func onAppear()
+    func didSelectCity(coordinates: Coordinates)
+    func didSelectCity(weatherInfo: WeatherInfo)
+}
+
+class SearchViewModel: ObservableObject, SearchViewModelable {
 
     var renderModel: [Coordinates] = []
     @Published var searchString = ""
@@ -59,7 +74,7 @@ class SearchViewModel: ObservableObject {
 }
 
 extension SearchViewModel {
-    func subscribeSearchResults() {
+    private func subscribeSearchResults() {
         $searchString
             .debounce(for: 1.0, scheduler: DispatchQueue.main)
             .removeDuplicates()
@@ -73,7 +88,7 @@ extension SearchViewModel {
             }.store(in: &anyCancellable)
     }
     
-    func saveDataInCache() {
+    private func saveDataInCache() {
         UserDefaults.standard.storeCodable(selectedCity, key: "SelectedCity")
         UserDefaults.standard.storeCodable(selectedCityWeatherInfo, key: "SelectedWeatherInfo")
     }

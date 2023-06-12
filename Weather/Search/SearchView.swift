@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct SearchView: View {
+struct SearchView<ViewModel>: View where ViewModel: SearchViewModelable {
 
-    @ObservedObject var viewModel: SearchViewModel
+    @ObservedObject var viewModel: ViewModel
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
