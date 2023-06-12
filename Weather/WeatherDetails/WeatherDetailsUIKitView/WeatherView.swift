@@ -57,10 +57,11 @@ class WeatherView: UIView {
     
     // For the sake of time not using Image Downloader.
     func setupImageView() {
-        guard let image = weatherInfo?.weather.first?.icon else {
+        guard let image = weatherInfo?.weather.first?.icon,
+              let image = UIImage(named: image) else {
             return
         }
-
-        imageView.image = UIImage(named: image)
+        
+        imageView.image = image
     }
 }
